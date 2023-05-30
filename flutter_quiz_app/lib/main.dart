@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quiz_app/pages/intro_page.dart';
+import 'package:flutter_quiz_app/start_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +10,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: IntroPage(
-          Color.fromARGB(255, 33, 0, 39), Color.fromARGB(255, 0, 4, 216)),
+      home: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 23, 85, 199),
+                Color.fromARGB(255, 73, 143, 248),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: const StartScreen(),
+        ),
+      ),
     );
   }
 }
