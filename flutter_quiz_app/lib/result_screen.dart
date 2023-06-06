@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quiz_app/data/questions.dart';
-import 'package:flutter_quiz_app/questions_summary.dart';
+import 'package:flutter_quiz_app/summary/questions_summary.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ResultScreen extends StatelessWidget {
   const ResultScreen({
     super.key,
     required this.choosenAnswers,
+    required this.onRestart,
   });
 
   final List<String> choosenAnswers;
+  final void Function() onRestart;
 
   List<Map<String, Object>> getSummaryData() {
     final List<Map<String, Object>> summary = [];
@@ -27,6 +30,27 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final summaryData = getSummaryData();
+    final numTotalQuestions = questions.length;
+    final numCorrectQuestions = summaryData.where(
+      (data) {
+        return data['user_answer'] == data['correct_answer'];
+      },
+    ).length;
+
+    String message() {
+      if (numCorrectQuestions < 3) {
+        return "Hmm, try again ...";
+      } else if (numCorrectQuestions == 3) {
+        return "Good Job !";
+      } else if (numCorrectQuestions < 6) {
+        return "Great Job !";
+      } else {
+        return "Excellent !";
+      }
+    }
+
+    ;
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -34,8 +58,24 @@ class ResultScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'You answerd X out of Y correctly!',
+            Text(
+              'You answerd $numCorrectQuestions out of $numTotalQuestions correctly!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.lato(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              "' ${message()} '",
+              style: GoogleFonts.lato(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 30,
@@ -44,10 +84,12 @@ class ResultScreen extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Restart Quiz'),
-            ),
+            TextButton.icon(
+              onPressed: onRestart,
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Restart Quiz!'),
+            )
           ],
         ),
       ),
